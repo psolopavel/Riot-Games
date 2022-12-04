@@ -1,0 +1,108 @@
+@use 'sass:math';
+@import './scss-stili/null.scss';
+
+$fontFamily: 'Montserrat';
+$fontSize: rem(14);
+
+$minWidth: 320;
+$maxWidth: 1920;
+
+$maxWidthConteiner: 3000;
+
+$conteinerPadding: 30;
+
+$responsiveType: 1;
+
+$conteinerWidth: $maxWidthConteiner + $conteinerPadding;
+
+
+$pc: rem($conteinerWidth);
+$tablet: rem(991.98);
+$mobile: rem(767.98);
+$mobileSmall: rem(479.98);
+
+
+body {
+   font-weight: 500;
+   font-family: $fontFamily;
+   color: white;
+   background-color: rgb(36, 36, 36);
+
+   .lock & {
+      overflow: hidden;
+      touch-action: none;
+   }
+}
+
+.wrapper {
+   min-height: 100%;
+   display: flex;
+   flex-direction: column;
+   overflow: hidden;
+
+   .loaded & {}
+
+   >main {
+      flex: 1 1 auto;
+   }
+
+   >* {
+      min-width: 0;
+   }
+}
+
+@import './scss-stili/mixin.scss';
+@import './scss-stili/home.scss';
+@import './scss-stili/wrapper.scss';
+@import './scss-stili/header.scss';
+@import './scss-stili/main.scss';
+// @import './scss-stili/checbox.scss';
+//использивать со своими класами\/
+// @import './scss-stili/nouslider.scss';
+
+@if $responsiveType==1 {
+   [class*="__conteiner"] {
+      @if ($maxWidthConteiner>0) {
+         max-width: rem($maxWidthConteiner);
+         box-sizing: content-box;
+         margin: 0 auto;
+      }
+
+      @if ($conteinerPadding>0) {
+         padding: 0 rem(math.div($conteinerPadding, 2));
+      }
+   }
+}
+
+@else {
+   [class*="__conteiner"] {
+      margin: 0 auto;
+
+      @if ($maxWidthConteiner>0) {
+         max-width: rem($maxWidthConteiner);
+         box-sizing: content-box;
+      }
+
+      @else {
+         @if ($conteinerPadding>0) {
+            padding: 0 rem(math.div($conteinerPadding, 2));
+         }
+      }
+
+      @media (max-width: $pc) {
+         max-width: rem(970);
+      }
+
+      @media (max-width: $tablet) {
+         max-width: rem(750);
+      }
+
+      @media (max-width: $mobile) {
+         max-width: none;
+
+         @if ($conteinerPadding>0 and $maxWidthConteiner>0) {
+            padding: 0 rem(math.div($conteinerPadding, 2));
+         }
+      }
+   }
+}

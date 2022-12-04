@@ -1,0 +1,42 @@
+&__body {
+   transition: all 0.3s ease 0s;
+   transform: translateX(-140px);
+   opacity: 0;
+   padding-top: rem(30);
+   height: 0;
+
+   &._sub-menu-open {
+      transform: translateX(0);
+      opacity: 1;
+      height: auto;
+   }
+
+   z-index: 2;
+   margin-bottom: rem(15);
+}
+
+// .price-filter__inputs
+.name {
+   &__inputs {
+      z-index: 2;
+      display: flex;
+      border: 2px solid #cbcbcb;
+
+      &:not(:last-child) {
+         margin-bottom: rem(30);
+      }
+   }
+
+   // .price-filter__inpute
+
+   &__inpute {
+      width: 50%;
+      height: rem(42);
+      font-size: rem(20);
+      text-align: center;
+
+      &:not(:last-child) {
+         border-right: 2px solid #cbcbcb;
+      }
+   }
+}

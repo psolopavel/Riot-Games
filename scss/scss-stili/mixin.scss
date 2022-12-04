@@ -1,0 +1,64 @@
+@use 'sass:math';
+
+// * Вся магия адаптива в @function clamp_preference
+// * все значения у ствойств css в rem
+
+// * функция конвертирует px в rem
+// * $px - значение в px, которое будет конвертированно в rem
+// * $default_font_size - размер шрифта, по умолчанию (16)
+@function remadaptive($px, $default_font_size: 16) {
+   @return ($px / $default_font_size)+rem;
+}
+
+// * функция для измерения предпочтительного значения (PREFERENCE) в функции clamp(MIN, PREFERENCE, MAX)
+// * $max_size - максимальное значение свойства css, выше него размер не будет меняться, к примеру font-fize: 48px
+// * $min_size - минимальное значение свойства css, от этого и будет расти значение css свойства, пока не достигнет $max_size, к примеру font-fize: 16px
+// * $max_window_width - максимальный размер окна, на котором остановится изменения, т.е. на 1200px свойтсво font-fize достигнет значения 48px
+// * $min_window_width - минимальный размер окна, после его достижения значение не будет опускаться, т.е. ниже 750px свойство font-fize опустится до 16px и больше не опустится
+// * $default_font_size - размер шрифта, по умолчанию (16)
+// * расчётная формула взята отсюда (там есть диаграммы, как это работает и примеры расчета на js):
+// ? https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/
+@function clamp_preference($max_size, $min_size, $max_window_width: 1920, $min_window_width: 320, $default_font_size: 16) {
+
+   // * а вот и магия!
+   $min_width: $min_window_width / $default_font_size;
+   $max_width: $max_window_width / $default_font_size;
+   $slope: ($max_size - $min_size ) / ($max_window_width - $min_window_width );
+   $y_axis_intersection: -$min_window_width * $slope +$min_size;
+
+   @return #{remadaptive($y_axis_intersection)}' + '#{$slope*100}vw;
+}
+
+// * функция возвращает адаптируемый clamp()
+@function adaptive_clamp($max, $min) {
+   @return #{'clamp(' remadaptive($min) ',' clamp_preference($max, $min) ',' remadaptive($max) ')'};
+}
+
+// * миксин добавляет css значение с адаптивным clamp()
+@mixin adaptive_clamp($css_property, $max, $min) {
+   #{$css_property}: adaptive_clamp($max, $min);
+}
+
+
+
+
+/* % TO */
+
+@function prc($pxOne, $pxTwo) {
+   $result: math.div($pxOne, $pxTwo) * 100%;
+   @return $result;
+}
+
+/* % REM */
+
+@function rem($px) {
+   $result: math.div($px, 16)+rem;
+   @return $result;
+}
+
+/* % EM */
+
+@function em($px) {
+   $result: math.div($px, 16)+em;
+   @return $result;
+}
